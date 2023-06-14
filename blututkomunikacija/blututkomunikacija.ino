@@ -29,16 +29,16 @@ void setup()
 {
   Serial.begin(9600);
   serial_connection.begin(9600);
-  Serial.println("Started");
+  
 
 
-  lStepper.setMaxSpeed(2000);
-  lStepper.setAcceleration(2000);
-  lStepper.setSpeed(2000);
+  lStepper.setMaxSpeed(10000);
+  lStepper.setAcceleration(10000);
+  lStepper.setSpeed(5000);
 
-  rStepper.setMaxSpeed(2000);
-  rStepper.setAcceleration(2000);
-  rStepper.setSpeed(2000);
+  rStepper.setMaxSpeed(10000);
+  rStepper.setAcceleration(10000);
+  rStepper.setSpeed(5000);
 }
 
 /*void runStep(){
@@ -74,7 +74,7 @@ void loop()
       serial_connection.println(rotate(inData[0]));
     }
     else if(inData[0]=='f'){
-      serial_connection.println(moveForward(returnNumber(inputS)+200));
+      serial_connection.println(moveForward(returnNumber(inputS)));
     }
 
   }
@@ -86,8 +86,17 @@ int returnNumber(String command){
   return number.toInt();
 }
 String moveForward(int distance){
-  lStepper.move(distance);
-  rStepper.move(distance);
+
+
+  /*
+    200 step => 5cm
+    200:5=x:1
+    40 step/cm
+  */
+
+  int constant=40;
+  lStepper.move(-distance*40);
+  rStepper.move(-distance*40);
   while((lStepper.distanceToGo() != 0 || lStepper.distanceToGo() != 0)&&(rStepper.distanceToGo() != 0 || rStepper.distanceToGo() != 0)){
     lStepper.run();
     rStepper.run();
